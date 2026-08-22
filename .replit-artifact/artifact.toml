@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "GOV Filing Alpha"
+version = "1.0.0"
+id = "artifacts/gov-filing-alpha"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 26162
+
+[services.development]
+run = "pnpm --filter @workspace/gov-filing-alpha run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/gov-filing-alpha", "run", "build" ]
+publicDir = "artifacts/gov-filing-alpha/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "26162"
+BASE_PATH = "/"
