@@ -32,6 +32,272 @@ const DATABASES = [
     live: true,
   },
   {
+    id: "insider-buying",
+    name: "Insider Buying",
+    desc: "Open-market insider purchases (Form 4) across all companies",
+    url: null,
+    link: (q: string) =>
+      `https://openinsider.com/search?q=${encodeURIComponent(q)}`,
+    viewUrl: (q: string) =>
+      `https://openinsider.com/search?q=${encodeURIComponent(q)}`,
+    color: "var(--t1-color)",
+    live: false,
+  },
+  {
+    id: "fda-pipeline",
+    name: "FDA Pipeline",
+    desc: "Drug approvals, applications & review status (Drugs@FDA)",
+    url: null,
+    link: (q: string) =>
+      `https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=BasicSearch.process&SearchTerm=${encodeURIComponent(q)}`,
+    viewUrl: (q: string) =>
+      `https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=BasicSearch.process&SearchTerm=${encodeURIComponent(q)}`,
+    color: "var(--t2-color)",
+    live: false,
+  },
+  {
+    id: "defense-contracts",
+    name: "Defense Contracts",
+    desc: "Federal contract awards & opportunities (SAM.gov / USAspending)",
+    url: null,
+    link: (q: string) =>
+      `https://www.usaspending.gov/search/?keyword=${encodeURIComponent(q)}`,
+    viewUrl: (q: string) =>
+      `https://www.usaspending.gov/search/?keyword=${encodeURIComponent(q)}`,
+    color: "var(--neutral-dim)",
+    live: false,
+  },
+  {
+    id: "sec13d-activists",
+    name: "SEC 13D Activists",
+    desc: "Beneficial ownership filings signaling activist intent",
+    url: null,
+    link: (q: string) =>
+      `https://efts.sec.gov/LATEST/search-index?q=${encodeURIComponent(q)}&forms=SC+13D`,
+    viewUrl: (q: string) =>
+      `https://efts.sec.gov/LATEST/search-index?q=${encodeURIComponent(q)}&forms=SC+13D`,
+    color: "var(--t1-color)",
+    live: false,
+  },
+  {
+    id: "8k-material-events",
+    name: "8-K Material Events",
+    desc: "Current reports on material corporate events",
+    url: null,
+    link: (q: string) =>
+      `https://efts.sec.gov/LATEST/search-index?q=${encodeURIComponent(q)}&forms=8-K`,
+    viewUrl: (q: string) =>
+      `https://efts.sec.gov/LATEST/search-index?q=${encodeURIComponent(q)}&forms=8-K`,
+    color: "var(--t1-color)",
+    live: false,
+  },
+  {
+    id: "s1-ipo-pipeline",
+    name: "S-1 IPO Pipeline",
+    desc: "Registration statements for upcoming public offerings",
+    url: null,
+    link: (q: string) =>
+      `https://efts.sec.gov/LATEST/search-index?q=${encodeURIComponent(q)}&forms=S-1`,
+    viewUrl: (q: string) =>
+      `https://efts.sec.gov/LATEST/search-index?q=${encodeURIComponent(q)}&forms=S-1`,
+    color: "var(--t1-color)",
+    live: false,
+  },
+  {
+    id: "schedule-to-buyouts",
+    name: "Schedule TO Buyouts",
+    desc: "Tender offer filings for acquisitions & buyouts",
+    url: null,
+    link: (q: string) =>
+      `https://efts.sec.gov/LATEST/search-index?q=${encodeURIComponent(q)}&forms=SC+TO-T`,
+    viewUrl: (q: string) =>
+      `https://efts.sec.gov/LATEST/search-index?q=${encodeURIComponent(q)}&forms=SC+TO-T`,
+    color: "var(--t1-color)",
+    live: false,
+  },
+  {
+    id: "trademark-intelligence",
+    name: "Trademark Intelligence",
+    desc: "USPTO trademark applications & registrations",
+    url: null,
+    link: (q: string) =>
+      `https://tmsearch.uspto.gov/search/search-information?query=${encodeURIComponent(q)}`,
+    viewUrl: (q: string) =>
+      `https://tmsearch.uspto.gov/search/search-information?query=${encodeURIComponent(q)}`,
+    color: "var(--accent)",
+    live: false,
+  },
+  {
+    id: "patent-signals",
+    name: "Patent Signals",
+    desc: "New patent filings & grants (Google Patents)",
+    url: null,
+    link: (q: string) =>
+      `https://patents.google.com/?q=${encodeURIComponent(q)}`,
+    viewUrl: (q: string) =>
+      `https://patents.google.com/?q=${encodeURIComponent(q)}`,
+    color: "var(--accent)",
+    live: false,
+  },
+  {
+    id: "patent-litigation",
+    name: "Patent Litigation",
+    desc: "Federal patent lawsuits & dockets (CourtListener/RECAP)",
+    url: null,
+    link: (q: string) =>
+      `https://www.courtlistener.com/?q=${encodeURIComponent(q)}&type=r&nature_of_suit=830`,
+    viewUrl: (q: string) =>
+      `https://www.courtlistener.com/?q=${encodeURIComponent(q)}&type=r&nature_of_suit=830`,
+    color: "var(--accent)",
+    live: false,
+  },
+  {
+    id: "ftc-antitrust",
+    name: "FTC Antitrust",
+    desc: "Antitrust actions, merger reviews & enforcement",
+    url: null,
+    link: (q: string) =>
+      `https://www.ftc.gov/search?query=${encodeURIComponent(q)}`,
+    viewUrl: (q: string) =>
+      `https://www.ftc.gov/search?query=${encodeURIComponent(q)}`,
+    color: "var(--t3-color)",
+    live: false,
+  },
+  {
+    id: "fcc-spectrum",
+    name: "FCC Spectrum",
+    desc: "Spectrum licenses & Universal Licensing System filings",
+    url: null,
+    link: (_q: string) => `https://www.fcc.gov/uls/`,
+    viewUrl: (_q: string) => `https://www.fcc.gov/uls/`,
+    color: "var(--t3-color)",
+    live: false,
+  },
+  {
+    id: "ferc-energy",
+    name: "FERC Energy",
+    desc: "Energy regulatory filings & dockets (eLibrary)",
+    url: null,
+    link: (_q: string) => `https://elibrary.ferc.gov/eLibrary/search`,
+    viewUrl: (_q: string) => `https://elibrary.ferc.gov/eLibrary/search`,
+    color: "var(--t3-color)",
+    live: false,
+  },
+  {
+    id: "ofac-sanctions",
+    name: "OFAC Sanctions",
+    desc: "Specially Designated Nationals & sanctions list search",
+    url: null,
+    link: (_q: string) => `https://sanctionssearch.ofac.treas.gov/`,
+    viewUrl: (_q: string) => `https://sanctionssearch.ofac.treas.gov/`,
+    color: "var(--t3-color)",
+    live: false,
+  },
+  {
+    id: "cfius-reviews",
+    name: "CFIUS Reviews",
+    desc: "Foreign investment national security reviews",
+    url: null,
+    link: (_q: string) =>
+      `https://home.treasury.gov/policy-issues/international/the-committee-on-foreign-investment-in-the-united-states-cfius`,
+    viewUrl: (_q: string) =>
+      `https://home.treasury.gov/policy-issues/international/the-committee-on-foreign-investment-in-the-united-states-cfius`,
+    color: "var(--t3-color)",
+    live: false,
+  },
+  {
+    id: "doe-grants",
+    name: "DOE Grants",
+    desc: "Department of Energy funding opportunities & awards",
+    url: null,
+    link: (q: string) =>
+      `https://www.grants.gov/search-grants?keywords=${encodeURIComponent(q)}`,
+    viewUrl: (q: string) =>
+      `https://www.grants.gov/search-grants?keywords=${encodeURIComponent(q)}`,
+    color: "var(--t2-color)",
+    live: false,
+  },
+  {
+    id: "dot-faa-certs",
+    name: "DOT/FAA Certs",
+    desc: "Aircraft & transportation certifications, registry lookups",
+    url: null,
+    link: (_q: string) => `https://amsrvs.registry.faa.gov/airmeninquiry/`,
+    viewUrl: (_q: string) => `https://amsrvs.registry.faa.gov/airmeninquiry/`,
+    color: "var(--neutral-dim)",
+    live: false,
+  },
+  {
+    id: "epa-actions",
+    name: "EPA Actions",
+    desc: "Enforcement & compliance history (ECHO facility search)",
+    url: null,
+    link: (q: string) =>
+      `https://echo.epa.gov/facilities/facility-search?fac_search=${encodeURIComponent(q)}`,
+    viewUrl: (q: string) =>
+      `https://echo.epa.gov/facilities/facility-search?fac_search=${encodeURIComponent(q)}`,
+    color: "var(--t1-color)",
+    live: false,
+  },
+  {
+    id: "cftc-positions",
+    name: "CFTC Positions",
+    desc: "Commitments of Traders reports & futures positioning",
+    url: null,
+    link: (_q: string) =>
+      `https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm`,
+    viewUrl: (_q: string) =>
+      `https://www.cftc.gov/MarketReports/CommitmentsofTraders/index.htm`,
+    color: "var(--t2-color)",
+    live: false,
+  },
+  {
+    id: "export-controls",
+    name: "Export Controls",
+    desc: "Denied persons, entity list & consolidated screening list",
+    url: null,
+    link: (_q: string) => `https://www.trade.gov/consolidated-screening-list`,
+    viewUrl: (_q: string) =>
+      `https://www.trade.gov/consolidated-screening-list`,
+    color: "var(--t3-color)",
+    live: false,
+  },
+  {
+    id: "fed-balance-sheet",
+    name: "Fed Balance Sheet",
+    desc: "Federal Reserve weekly balance sheet (H.4.1 release)",
+    url: null,
+    link: (_q: string) => `https://www.federalreserve.gov/releases/h41/current/`,
+    viewUrl: (_q: string) =>
+      `https://www.federalreserve.gov/releases/h41/current/`,
+    color: "var(--t2-color)",
+    live: false,
+  },
+  {
+    id: "treasury-tic",
+    name: "Treasury TIC",
+    desc: "Foreign holdings of U.S. securities (TIC data)",
+    url: null,
+    link: (_q: string) =>
+      `https://home.treasury.gov/data/treasury-international-capital-tic-system-home`,
+    viewUrl: (_q: string) =>
+      `https://home.treasury.gov/data/treasury-international-capital-tic-system-home`,
+    color: "var(--t2-color)",
+    live: false,
+  },
+  {
+    id: "bank-stress",
+    name: "Bank Stress",
+    desc: "Bank stress test results (DFAST / CCAR)",
+    url: null,
+    link: (_q: string) =>
+      `https://www.federalreserve.gov/supervisionreg/dfast-archive.htm`,
+    viewUrl: (_q: string) =>
+      `https://www.federalreserve.gov/supervisionreg/dfast-archive.htm`,
+    color: "var(--t2-color)",
+    live: false,
+  },
+  {
     id: "edgar-forms",
     name: "EDGAR Full-Text Search",
     desc: "Search all SEC filing text (EFTS portal)",
