@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from "react";
 
 /* SEC EDGAR full-text search (efts.sec.gov) does not send CORS headers, so
-   browsers block direct fetches. Requests go through a public relay that
-   adds them, falling back to a direct call (in case SEC enables CORS).
-   Fields below match the real API response: _source.display_names[],
-   _source.form, _source.ciks[], _source.adsh; _id is "adsh:filename". */
+   browsers block direct fetches. Queries race our own EDGAR pass-through
+   (forecaster service /api/edgar-search) against a public relay, first good
+   answer wins. Fields below match the real API response:
+   _source.display_names[], _source.form, _source.ciks[], _source.adsh;
+   _id is "adsh:filename". */
 
 interface EdgarHit {
   _id: string;
@@ -252,19 +253,26 @@ function entityLabel(hit: EdgarHit) {
 }
 
 async function fetchEdgarJson(url: string, signal: AbortSignal) {
-  const routes = [`https://api.cors.lol/?url=${encodeURIComponent(url)}`, url];
-  let lastErr: unknown = null;
-  for (const route of routes) {
-    try {
-      const res = await fetch(route, { signal });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
-    } catch (err) {
-      if (err instanceof Error && err.name === "AbortError") throw err;
-      lastErr = err;
-    }
-  }
-  throw lastErr instanceof Error ? lastErr : new Error("fetch failed");
+  // Race three routes; first good JSON wins:
+  // 1. our own EDGAR pass-through on the forecaster service (reliable),
+  // 2. a public relay (fast when it isn't rate-limiting),
+  // 3. direct to SEC (only works if SEC ever enables CORS).
+  const parsed = new URL(url);
+  const own = new URL("https://forecaster-5wv4.onrender.com/api/edgar-search");
+  own.searchParams.set("q", parsed.searchParams.get("q") || "");
+  const forms = parsed.searchParams.get("forms");
+  if (forms) own.searchParams.set("forms", forms);
+  const routes = [
+    own.toString(),
+    `https://api.cors.lol/?url=${encodeURIComponent(url)}`,
+    url,
+  ];
+  const attempts = routes.map(async (route) => {
+    const res = await fetch(route, { signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  });
+  return Promise.any(attempts);
 }
 
 function formatDate(dateStr?: string) {
@@ -329,6 +337,7 @@ export function SearchSection() {
         });
       } catch (err: unknown) {
         if (err instanceof Error && err.name === "AbortError") return;
+        if (abortRef.current?.signal.aborted) return;
         setError(
           "Could not reach EDGAR right now. The SEC feed (or its relay) may be busy — try again, or open EDGAR directly below.",
         );
